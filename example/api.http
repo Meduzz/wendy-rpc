@@ -1,0 +1,59 @@
+POST /api
+Host: localhost:8080
+
+{
+    "module":"service",
+    "method":"add",
+    "body": {
+        "type":"application/json",
+        "data":{
+            "name":"service-discovery",
+            "tags":["awesome"],
+            "host":"127.0.0.2",
+            "port":8080
+        }
+    }
+}
+
+###
+POST /api
+Host: localhost:8080
+
+{
+    "module":"service",
+    "method":"list",
+    "body": {
+        "type":"application/json",
+        "data":"service-discovery"
+    }
+}
+
+###
+POST /api
+Host: localhost:8080
+
+{
+    "module":"service",
+    "method":"find",
+    "body": {
+        "type":"application/json",
+        "data":"service-discovery"
+    }
+}
+
+###
+POST /api
+Host: localhost:8080
+
+{
+    "module":"service",
+    "method":"remove",
+    "body": {
+        "type":"application/json",
+        "data":{
+            "name":"service-discovery",
+            "host":"127.0.0.2",
+            "port":8080
+        }
+    }
+}
