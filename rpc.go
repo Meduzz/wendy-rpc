@@ -10,12 +10,12 @@ import (
 )
 
 // ServeModules serves a bunch of modules over nats.
-func ServeModules(conn *nats.Conn, queue, app string, modules ...*wendy.Module) error {
+func ServeModules(conn *nats.Conn, queue string, modules ...*wendy.Module) error {
 	for _, m := range modules {
 		topic := fmt.Sprintf("%s.*", m.Name())
 
-		if app != "" {
-			topic = fmt.Sprintf("%s.%s.*", app, m.Name())
+		if m.App() != "" {
+			topic = fmt.Sprintf("%s.%s.*", m.App(), m.Name())
 		}
 
 		if queue != "" {

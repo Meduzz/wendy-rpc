@@ -16,7 +16,7 @@ func main() {
 		panic(err)
 	}
 
-	err = wendyrpc.ServeModules(conn, "workgroup1", "example", service.ServiceModule())
+	err = wendyrpc.ServeModules(conn, "workgroup1", service.ServiceModule())
 
 	if err != nil {
 		panic(err)
