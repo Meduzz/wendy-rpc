@@ -71,14 +71,12 @@ func wrapModule(module *wendy.Module) nats.MsgHandler {
 			return
 		}
 
-		h := module.Method(req.Method)
-
-		if h == nil {
+		if !module.CanHandle(req) {
 			log.Printf("[message handler] no handler found for %s", req.Method)
 			return
 		}
 
-		res := h(req)
+		res := module.Handle(req)
 
 		bs, err := json.Marshal(res)
 
