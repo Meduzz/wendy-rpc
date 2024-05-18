@@ -10,12 +10,12 @@ import (
 )
 
 // ServeModules serves a bunch of modules over nats.
-func ServeModules(conn *nats.Conn, queue string, modules ...*wendy.Module) error {
+func ServeModules(conn *nats.Conn, queue, prefix string, modules ...*wendy.Module) error {
 	for _, m := range modules {
 		topic := fmt.Sprintf("%s.*", m.Name())
 
-		if m.App() != "" {
-			topic = fmt.Sprintf("%s.%s.*", m.App(), m.Name())
+		if prefix != "" {
+			topic = fmt.Sprintf("%s.%s.*", prefix, m.Name())
 		}
 
 		if queue != "" {
@@ -37,13 +37,7 @@ func ServeModules(conn *nats.Conn, queue string, modules ...*wendy.Module) error
 }
 
 // ServeMethod serves a single wendy method over nats.
-func ServeMethod(conn *nats.Conn, queue, app, module, method string, handler wendy.Handler) error {
-	topic := fmt.Sprintf("%s.%s", module, method)
-
-	if app != "" {
-		topic = fmt.Sprintf("%s.%s.%s", app, module, method)
-	}
-
+func ServeMethod(conn *nats.Conn, queue, topic string, handler wendy.Handler) error {
 	if queue != "" {
 		_, err := conn.QueueSubscribe(topic, queue, wrapHandler(handler))
 

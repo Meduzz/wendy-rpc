@@ -18,7 +18,7 @@ func main() {
 	}
 
 	srv := rpc.NewRpc(conn)
-	proxy := wendyrpc.WendyProxy(srv)
+	proxy := wendyrpc.WendyProxy(srv, "")
 
 	http.HandleFunc("/api", handle(proxy))
 	err = http.ListenAndServe(":8080", http.DefaultServeMux)

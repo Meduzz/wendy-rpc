@@ -12,15 +12,16 @@ import (
 
 type (
 	wendyProxy struct {
-		srv *rpc.RPC
+		prefix string
+		srv    *rpc.RPC
 	}
 )
 
 func (w *wendyProxy) Handle(ctx context.Context, req *wendy.Request) *wendy.Response {
 	topic := fmt.Sprintf("%s.%s", req.Module, req.Method)
 
-	if req.App != "" {
-		topic = fmt.Sprintf("%s.%s.%s", req.App, req.Module, req.Method)
+	if w.prefix != "" {
+		topic = fmt.Sprintf("%s.%s.%s", w.prefix, req.Module, req.Method)
 	}
 
 	resCtx, err := w.srv.RequestContext(ctx, topic, req)
@@ -49,6 +50,6 @@ func (w *wendyProxy) Handle(ctx context.Context, req *wendy.Request) *wendy.Resp
 }
 
 // WendyProxy implements Wendy interface but proxies requests over nats
-func WendyProxy(srv *rpc.RPC) wendy.Wendy {
-	return &wendyProxy{srv}
+func WendyProxy(srv *rpc.RPC, prefix string) wendy.Wendy {
+	return &wendyProxy{prefix, srv}
 }
