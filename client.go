@@ -31,20 +31,14 @@ func (w *WendyRpcClient) Request(prefix string, req *wendy.Request) (*wendy.Resp
 		topic = fmt.Sprintf("%s.%s.%s", prefix, req.Module, req.Method)
 	}
 
-	response, err := w.rpc.Request(topic, req, int(w.timeout.Seconds()))
+	response := &wendy.Response{}
+	err := w.rpc.Request(topic, req, response, int(w.timeout.Seconds()))
 
 	if err != nil {
 		return nil, err
 	}
 
-	res := &wendy.Response{}
-	err = response.Bind(res)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return response, nil
 }
 
 func (w *WendyRpcClient) Trigger(topic string, event *Event) error {

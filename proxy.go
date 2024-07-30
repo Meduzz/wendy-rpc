@@ -24,7 +24,8 @@ func (w *wendyProxy) Handle(ctx context.Context, req *wendy.Request) *wendy.Resp
 		topic = fmt.Sprintf("%s.%s.%s", w.prefix, req.Module, req.Method)
 	}
 
-	resCtx, err := w.srv.RequestContext(ctx, topic, req)
+	res := &wendy.Response{}
+	err := w.srv.RequestContext(ctx, topic, req, res)
 
 	if err != nil {
 		if err == nats.ErrTimeout {
@@ -36,14 +37,6 @@ func (w *wendyProxy) Handle(ctx context.Context, req *wendy.Request) *wendy.Resp
 			log.Printf("Request to %s threw error: %v\n", topic, err)
 			return wendy.Error(nil)
 		}
-	}
-
-	res := &wendy.Response{}
-	err = resCtx.Bind(res)
-
-	if err != nil {
-		log.Printf("Parsing response threw error: %v\n", err)
-		return wendy.Error(nil)
 	}
 
 	return res

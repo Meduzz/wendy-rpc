@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/Meduzz/rpc"
+	"github.com/Meduzz/rpc/encoding"
 	"github.com/Meduzz/wendy"
 	wendyrpc "github.com/Meduzz/wendy-rpc"
 	"github.com/nats-io/nats.go"
@@ -17,7 +18,7 @@ func main() {
 		panic(err)
 	}
 
-	srv := rpc.NewRpc(conn)
+	srv := rpc.NewRpc(conn, encoding.Json())
 	proxy := wendyrpc.WendyProxy(srv, "")
 
 	http.HandleFunc("/api", handle(proxy))
